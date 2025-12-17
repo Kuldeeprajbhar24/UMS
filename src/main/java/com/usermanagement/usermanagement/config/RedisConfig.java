@@ -18,7 +18,7 @@ public class RedisConfig {
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
 
-        // 🔥 SAME ObjectMapper logic as JacksonConfig
+        // SAME ObjectMapper logic as JacksonConfig
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
