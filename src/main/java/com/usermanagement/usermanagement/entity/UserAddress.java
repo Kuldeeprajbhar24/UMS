@@ -18,7 +18,7 @@ public class UserAddress {
     private Long addressId;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private UserMaster user;
 
@@ -29,8 +29,7 @@ public class UserAddress {
 
     @PrePersist
     public void onCreate() {
-        if (createdAt == null) {
+        if (createdAt == null)
             createdAt = LocalDateTime.now();
-        }
     }
 }

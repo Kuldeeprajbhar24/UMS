@@ -19,38 +19,33 @@ import java.time.Duration;
 public class RedisConfig {
 
     @Bean
-    public RedisCacheConfiguration cacheConfiguration() {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    public RedisCacheConfiguration cacheConfiguration(ObjectMapper objectMapper) {
 
         GenericJackson2JsonRedisSerializer serializer =
-                new GenericJackson2JsonRedisSerializer(mapper);
+                new GenericJackson2JsonRedisSerializer(objectMapper);
 
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(1))
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
-                                RedisSerializer.string()
-                        )
-                )
+                                RedisSerializer.string()))
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(
-                                serializer
-                        )
-                );
+                                serializer));
     }
+
     @Bean
     public LettuceConnectionFactory redisConnectionFactory(
             @Value("${spring.redis.host}") String host,
             @Value("${spring.redis.port}") int port,
-            @Value("${spring.redis.password}") String password) {
+            @Value("${spring.redis.password:}") String password) {
+
         RedisStandaloneConfiguration config =
                 new RedisStandaloneConfiguration(host, port);
-        config.setPassword(password);
-
+        if (!password.isBlank()) {
+            config.setPassword(password);
+        }
         return new LettuceConnectionFactory(config);
     }
-
 }
+

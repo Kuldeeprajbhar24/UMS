@@ -28,22 +28,20 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(service.getAllUsers());
+    public List<UserDto> getAllUsers() {
+        return service.getAllUsers();
     }
 
     @PostMapping
     public ResponseEntity<UserMaster> createUser(@RequestBody UserMaster user) {
-
         user.setUserPassword(encoder.encode(user.getUserPassword()));
         UserMaster saved = repo.save(user);
         service.clearCache();
-
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserMaster> updateUser(
+    public UserMaster updateUser(
             @PathVariable Long id,
             @RequestBody UserMaster newUser) {
 
@@ -58,22 +56,16 @@ public class UserController {
             user.setUserPassword(encoder.encode(newUser.getUserPassword()));
         }
 
-        UserMaster updated = repo.save(user);
         service.clearCache();
-
-        return ResponseEntity.ok(updated);
+        return repo.save(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-
+    public void deleteUser(@PathVariable Long id) {
         if (!repo.existsById(id)) {
             throw new ResourceNotFoundException("User not found");
         }
-
         repo.deleteById(id);
         service.clearCache();
-
-        return ResponseEntity.noContent().build();
     }
 }

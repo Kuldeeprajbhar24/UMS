@@ -34,14 +34,11 @@ public class UserMaster {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserAddress> addresses = new ArrayList<>();
 
-
     @PrePersist
     public void onCreate() {
-        if (dateOfRegistration == null) {
+        if (dateOfRegistration == null)
             dateOfRegistration = LocalDateTime.now();
-        }
-        if (status == null) {
+        if (status == null)
             status = "ACTIVE";
-        }
     }
 }

@@ -12,14 +12,10 @@ public class JacksonConfig {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-
-        // 🔥 THIS IS IMPORTANT
         mapper.registerModule(new JavaTimeModule());
-
-        // Optional but recommended
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
         return mapper;
     }
 }
+
 
