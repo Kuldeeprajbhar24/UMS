@@ -6,6 +6,7 @@ import com.usermanagement.usermanagement.repository.UserRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class UserService {
     public UserService(UserRepository repo) {
         this.repo = repo;
     }
+    @Transactional(readOnly = true)
     @Cacheable("users")
     public List<UserDto> getAllUsers() {
 
